@@ -19,6 +19,8 @@ import lombok.Setter;
 @Entity
 public class Category {
 
+   
+
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
@@ -26,5 +28,10 @@ public class Category {
 
     @OneToMany(mappedBy="category")
     private List<Product> products;
+
+    //Creation du constructeurs Category a cause des fonctions addProductet updateProduct 
+    public Category(String name) {
+        this.name = name;
+    }
 
 }
