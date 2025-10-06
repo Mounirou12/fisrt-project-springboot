@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.dailycodework.fisrtprojectspringboot.exceptions.ProductNotFoundException;
+import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Category;
 import com.dailycodework.fisrtprojectspringboot.model.Product;
 import com.dailycodework.fisrtprojectspringboot.repository.CategoryRepository;
@@ -49,13 +49,13 @@ public class ProductService implements IProductService {//  Implémente le contr
 
     @Override
     public Product getProductById(long id) {
-        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException("Product Not found"));
+        return productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product Not found"));
     }
 
     @Override
     public void deleteProductById(long id) {
         productRepository.findById(id).ifPresentOrElse(productRepository::delete, () -> {
-            throw new ProductNotFoundException("Product not found");
+            throw new ResourceNotFoundException("Product not found");
         });
     }
 
@@ -64,7 +64,7 @@ public class ProductService implements IProductService {//  Implémente le contr
         return productRepository.findById(productId)
         .map(existingProduct->updateExistingProduct(existingProduct, request))
         .map(productRepository :: save)
-        .orElseThrow(()-> new ProductNotFoundException("Product not found"));
+        .orElseThrow(()-> new ResourceNotFoundException("Product not found"));
     }
 
     private Product updateExistingProduct(Product existingProduct,ProductUpdateRequest request){
