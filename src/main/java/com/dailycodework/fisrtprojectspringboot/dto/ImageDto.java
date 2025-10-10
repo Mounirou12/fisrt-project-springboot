@@ -12,13 +12,13 @@ public class ImageDto {
     /**
      * Identifiant unique de l'image (ex: 123)
      */
-    private  Long imageId;
+    private  Long id;
 
     /**
      * Nom original du fichier image (ex: "produit-photo.jpg")
      */
 
-    private String imageName;
+    private String fileName;
 
      /**
      * URL publique de téléchargement (ex: "https://storage.com/images/abc123.jpg")

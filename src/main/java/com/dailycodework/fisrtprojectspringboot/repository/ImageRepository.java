@@ -1,5 +1,7 @@
 package com.dailycodework.fisrtprojectspringboot.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.dailycodework.fisrtprojectspringboot.model.Image;
@@ -20,5 +22,7 @@ import com.dailycodework.fisrtprojectspringboot.model.Image;
  */
 
 public interface ImageRepository extends JpaRepository<Image, Long>{
+
+    List<Image> findByProductId(long id);
 
 }

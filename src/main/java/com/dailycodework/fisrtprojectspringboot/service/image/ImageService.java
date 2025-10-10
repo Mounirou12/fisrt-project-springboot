@@ -95,8 +95,8 @@ public class ImageService implements IImageService {
 
                 // 7. Conversion en DTO
                 ImageDto imageDto = new ImageDto();
-                imageDto.setImageId(savedImage.getId());
-                imageDto.setImageName(savedImage.getFileName());
+                imageDto.setId(savedImage.getId());
+                imageDto.setFileName(savedImage.getFileName());
                 imageDto.setDownloadUrl(savedImage.getDownloadUrl());
                 savedImageDto.add(imageDto);
             } catch (SQLException | IOException e) {

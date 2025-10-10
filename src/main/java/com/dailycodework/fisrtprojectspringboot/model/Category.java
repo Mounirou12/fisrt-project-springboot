@@ -2,6 +2,8 @@ package com.dailycodework.fisrtprojectspringboot.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +27,10 @@ public class Category {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
     private String name;
-
+    
+    // Annotation Jackson qui ignore ce champ lors de la sérialisation/désérialisation JSON
+    // Empêche ce champ d'apparaître dans la réponse JSON de l'API
+    @JsonIgnore
     @OneToMany(mappedBy="category")
     private List<Product> products;
 

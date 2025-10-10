@@ -3,6 +3,8 @@ package com.dailycodework.fisrtprojectspringboot.model;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,9 +36,13 @@ public class Product {
 
     @ManyToOne(cascade=CascadeType.ALL)
     @JoinColumn(name="category_id")
-    private Category category;
+    // Annotation Jackson qui marque le côté "enfant" dans une relation bidirectionnelle
+    // Empêche la sérialisation JSON de ce champ pour éviter les boucles infinies
+    @JsonBackReference
+    private Category category;  
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    
+    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL, orphanRemoval = true )
     private List<Image> images;
 
     //Creation du constructeurs Product a cause des fonctions addProductet updateProduct 

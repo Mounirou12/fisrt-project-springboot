@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dailycodework.fisrtprojectspringboot.dto.ProductDto;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Product;
 import com.dailycodework.fisrtprojectspringboot.request.AddProductRequest;
@@ -32,19 +33,20 @@ import lombok.RequiredArgsConstructor;
 
         @GetMapping("/all")
         public ResponseEntity<ApiResponse> getAllProducts() {
-            try {
                 List<Product> products = productService.getAllProducts();
-                return ResponseEntity.ok(new ApiResponse("Found", products));
-            } catch (Exception e) {
-                return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Error", INTERNAL_SERVER_ERROR));
-            }
+                // Appelle le service pour convertir une liste d'entités Product en liste de ProductDto
+                // using ModelMapper pour transformer les données 
+                List<ProductDto> convertProduct = productService.getConvertedProducts(products);
+                return ResponseEntity.ok(new ApiResponse("Found", convertProduct));  
         }
 
         @GetMapping("/product/{productId}/product")
         public ResponseEntity<ApiResponse> getProductById(@PathVariable("productId") Long id) {
             try {
                 Product product = productService.getProductById(id);
-                return ResponseEntity.ok(new ApiResponse("Found", product));
+                // Convertit une entité Product en ProductDto using ModelMapper pour séparer les données de la base de données de l'API REST
+                ProductDto productDto = productService.convertToDto(product);
+                return ResponseEntity.ok(new ApiResponse("Found", productDto));
             } catch (ResourceNotFoundException e) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
             }
@@ -86,10 +88,11 @@ import lombok.RequiredArgsConstructor;
                 @RequestParam String productName) {
             try {
                 List<Product> products = productService.getProductsByBrandAndName(brandName, productName);
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
-                return ResponseEntity.ok(new ApiResponse("success", products));
+                return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
             }
@@ -100,10 +103,11 @@ import lombok.RequiredArgsConstructor;
                 @RequestParam String brand) {
             try {
                 List<Product> products = productService.getProductsByCategoryAndBrand(category, brand);
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
-                return ResponseEntity.ok(new ApiResponse("success", products));
+                return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("error", e.getMessage()));
 
@@ -114,10 +118,11 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> getProductsByName(@PathVariable String name) {
             try {
                 List<Product> products = productService.getProductsByName(name);
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
-                return ResponseEntity.ok(new ApiResponse("success", products));
+                return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
             }
@@ -127,10 +132,12 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> getProductsByBrand(@RequestParam String brand) {
             try {
                 List<Product> products = productService.getProductsByBrand(brand);
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
-                return ResponseEntity.ok(new ApiResponse("success", products));
+                return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
             }
@@ -140,10 +147,12 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> getProductsByCategory(@PathVariable String category){
             try {
                 List<Product> products = productService.getProductsByCategory(category);
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
+
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
-                return ResponseEntity.ok(new ApiResponse("success", products));
+                return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
             }

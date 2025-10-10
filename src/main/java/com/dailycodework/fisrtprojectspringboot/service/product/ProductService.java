@@ -3,12 +3,17 @@ package com.dailycodework.fisrtprojectspringboot.service.product;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.dailycodework.fisrtprojectspringboot.dto.ImageDto;
+import com.dailycodework.fisrtprojectspringboot.dto.ProductDto;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Category;
+import com.dailycodework.fisrtprojectspringboot.model.Image;
 import com.dailycodework.fisrtprojectspringboot.model.Product;
 import com.dailycodework.fisrtprojectspringboot.repository.CategoryRepository;
+import com.dailycodework.fisrtprojectspringboot.repository.ImageRepository;
 import com.dailycodework.fisrtprojectspringboot.repository.ProductRepository;
 import com.dailycodework.fisrtprojectspringboot.request.AddProductRequest;
 import com.dailycodework.fisrtprojectspringboot.request.ProductUpdateRequest;
@@ -21,6 +26,8 @@ public class ProductService implements IProductService {//  Implémente le contr
     //  Dépendances injectées automatiquement par Spring via le constructeur généré
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public Product addProduct(AddProductRequest request) {
@@ -110,6 +117,31 @@ public class ProductService implements IProductService {//  Implémente le contr
     @Override
     public long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+
+    // Implémentation de l'interface qui convertit une liste d'entités Product en ProductDto
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return products.stream()       // Transforme la liste en stream pour le traitement
+        .map(this::convertToDto)       // Convertit chaque Product en ProductDto
+        .toList();                     // Retourne la liste convertie
+    }
+
+    // Convertit une entité Product en ProductDto en incluant les images associées
+    @Override
+    public ProductDto convertToDto(Product product) {
+        // Convertit le Product de base en ProductDto using ModelMapper
+        ProductDto productDto = modelMapper.map(product, ProductDto.class);
+        // Récupère toutes les images associées à ce produit depuis la base de données
+        List<Image> images = imageRepository.findByProductId(product.getId()); 
+        // Convertit la liste d'entités Image en liste de ImageDto
+        List<ImageDto> imageDtos = images.stream()
+        .map(image -> modelMapper.map(image, ImageDto.class))
+        .toList();
+        // Assigne les images converties au DTO du produit
+        productDto.setImages(imageDtos);
+        // Retourne le ProductDto complet avec ses images
+        return  productDto;
     }
 
 }

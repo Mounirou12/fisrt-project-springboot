@@ -2,6 +2,8 @@ package com.dailycodework.fisrtprojectspringboot.model;
 
 import java.sql.Blob;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,5 +35,8 @@ public class Image {
 
     @ManyToOne
     @JoinColumn(name ="product_id")
+    // Annotation Jackson qui ignore ce champ lors de la sérialisation/désérialisation JSON
+    // Empêche ce champ d'apparaître dans la réponse JSON de l'API
+    @JsonIgnore
     private Product product;
 }

@@ -2,6 +2,7 @@ package com.dailycodework.fisrtprojectspringboot.service.product;
 
 import java.util.List;
 
+import com.dailycodework.fisrtprojectspringboot.dto.ProductDto;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ProductNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Product;
 import com.dailycodework.fisrtprojectspringboot.request.AddProductRequest;
@@ -43,7 +44,7 @@ public interface IProductService {
      * Récupère la liste complète de tous les produits disponibles.
      * @return Une liste de tous les produits (peut être vide)
      */
-    List<Product> getAllProducts();
+  List<Product> getAllProducts();
 
      /**
      * Filtre les produits par catégorie.
@@ -89,4 +90,8 @@ public interface IProductService {
      * @return Le nombre total de produits correspondants
      */
     long countProductsByBrandAndName(String brand, String name);
+
+      ProductDto convertToDto(Product product);
+
+      List<ProductDto> getConvertedProducts(List<Product> products);
 }
