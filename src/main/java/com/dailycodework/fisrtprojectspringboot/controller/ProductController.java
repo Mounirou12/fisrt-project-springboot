@@ -56,7 +56,9 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
             try {
                 Product theproduct = productService.addProduct(product);
-                return ResponseEntity.ok(new ApiResponse("Add product success", theproduct));
+                // Convertit une entité Product en ProductDto using ModelMapper pour séparer les données de la base de données de l'API REST
+                ProductDto productDto = productService.convertToDto(theproduct);
+                return ResponseEntity.ok(new ApiResponse("Add product success", productDto));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
             }
@@ -67,7 +69,9 @@ import lombok.RequiredArgsConstructor;
                 @PathVariable("productId") Long id) {
             try {
                 Product theproduct = productService.updateProduct(product, id);
-                return ResponseEntity.ok(new ApiResponse("Update product success", theproduct));
+                // Convertit une entité Product en ProductDto using ModelMapper pour séparer les données de la base de données de l'API REST
+                ProductDto productDto = productService.convertToDto(theproduct);
+                return ResponseEntity.ok(new ApiResponse("Update product success", productDto));
             } catch (ResourceNotFoundException e) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
             }
@@ -88,10 +92,12 @@ import lombok.RequiredArgsConstructor;
                 @RequestParam String productName) {
             try {
                 List<Product> products = productService.getProductsByBrandAndName(brandName, productName);
-                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
+                // Appelle le service pour convertir une liste d'entités Product en liste de ProductDto
+                // using ModelMapper pour transformer les données
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
@@ -103,10 +109,12 @@ import lombok.RequiredArgsConstructor;
                 @RequestParam String brand) {
             try {
                 List<Product> products = productService.getProductsByCategoryAndBrand(category, brand);
-                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
+                // Appelle le service pour convertir une liste d'entités Product en liste de ProductDto
+                // using ModelMapper pour transformer les données
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("error", e.getMessage()));
@@ -118,10 +126,12 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> getProductsByName(@PathVariable String name) {
             try {
                 List<Product> products = productService.getProductsByName(name);
-                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
+                // Appelle le service pour convertir une liste d'entités Product en liste de ProductDto
+                // using ModelMapper pour transformer les données
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
@@ -132,11 +142,12 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> getProductsByBrand(@RequestParam String brand) {
             try {
                 List<Product> products = productService.getProductsByBrand(brand);
-                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
-
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
+                // Appelle le service pour convertir une liste d'entités Product en liste de ProductDto
+                // using ModelMapper pour transformer les données
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
@@ -147,11 +158,12 @@ import lombok.RequiredArgsConstructor;
         public ResponseEntity<ApiResponse> getProductsByCategory(@PathVariable String category){
             try {
                 List<Product> products = productService.getProductsByCategory(category);
-                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
-
                 if (products.isEmpty()) {
                     return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("Not products found", null));
                 }
+                // Appelle le service pour convertir une liste d'entités Product en liste de ProductDto
+                // using ModelMapper pour transformer les données
+                List<ProductDto> convertedProducts = productService.getConvertedProducts(products);
                 return ResponseEntity.ok(new ApiResponse("success", convertedProducts));
             } catch (Exception e) {
                 return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
