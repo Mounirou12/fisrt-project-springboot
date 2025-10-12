@@ -27,7 +27,7 @@ public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
 
-    private long id;
+    private Long id;//correction du type Long
     private String name;
     private String brand;
     private BigDecimal price;

@@ -41,7 +41,7 @@ public class CartItem {
     // @JsonBackReference // Annotation Jackson commentée pour la gestion des références circulaires
     private Cart cart; // Référence au panier (Cart) auquel cette ligne appartient
 
-    public void SetTotalPrice() {
+    public void setTotalPrice() {//correction du nom
         // Méthode pour calculer automatiquement le prix total
         // Multiplie le prix unitaire par la quantité pour obtenir le total
         this.totalPrice = this.unitPrice.multiply(new BigDecimal(quantity));
