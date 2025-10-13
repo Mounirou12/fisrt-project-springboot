@@ -25,7 +25,7 @@ public class CartItemController {
     private final ICartService cartService;//Je m'etais trompe de Repository
 
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long cartId, @RequestParam Long productId,
+    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId, @RequestParam Long productId,
             @RequestParam int quantity) {
         try {
             //This line checks if the cartId provided in the request is null. A null value indicates that the user does not yet have a shopping cart.
