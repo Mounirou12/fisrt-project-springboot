@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,7 +52,7 @@ public class CartItemController {
         }
     }
 
-    @PostMapping("/cart/{cartId}/item/{itemId}/update")
+    @PutMapping("/cart/{cartId}/item/{itemId}/update")
     public ResponseEntity<ApiResponse> updateCartItem(@PathVariable Long cartId,@PathVariable Long itemId,@RequestParam int quantity){
         try {
             cartItemService.updateCartItem(cartId, itemId, quantity);
