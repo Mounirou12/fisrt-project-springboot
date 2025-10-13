@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,11 +38,13 @@ public class Cart {
     public void addItem(CartItem item){
         this.items.add(item); // Ajoute l'article à la collection du panier
         item.setCart(this);   // Établit la relation inverse : l'article référence ce panier
+        updateTotalAmount();  // Met à jour le montant total(J'ai oublie de le mettre )
     }
 
     public void removeItem(CartItem item){
         this.items.remove(item); // Retire l'article de la collection du panier
         item.setCart(null); // Supprime la référence au panier dans l'article
+        updateTotalAmount(); // Met à jour le montant total (J'ai oublie de le mettre )
     }
 
     public void updateTotalAmount(){

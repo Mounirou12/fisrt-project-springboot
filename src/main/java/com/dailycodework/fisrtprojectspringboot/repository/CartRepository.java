@@ -6,6 +6,5 @@ import com.dailycodework.fisrtprojectspringboot.model.Cart;
 
 public interface CartRepository  extends JpaRepository<Cart,Long> {
 
-    void deleteAllByCartId(Long id);
 
 }

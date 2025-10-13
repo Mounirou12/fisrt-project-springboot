@@ -1,11 +1,12 @@
 package com.dailycodework.fisrtprojectspringboot.service.cart;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
 import com.dailycodework.fisrtprojectspringboot.model.Cart;
-import com.dailycodework.fisrtprojectspringboot.model.CartItem;
+import com.dailycodework.fisrtprojectspringboot.repository.CartItemRepository;
 import com.dailycodework.fisrtprojectspringboot.repository.CartRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CartService implements ICartService {
     private final CartRepository cartRepository;
-    private final CartRepository cartItemRepository;
+    private final CartItemRepository cartItemRepository;
+    private final AtomicLong cartIdGenerator = new AtomicLong();// Compteur atomique pour les IDs de panier
 
     @Override
     public Cart getCart(Long id) {
@@ -49,6 +51,18 @@ public class CartService implements ICartService {
         // Alternative commentée qui recalcule le total à la volée
         // return cart.getItems().stream().map(CartItem::getTotalPrice).reduce(BigDecimal.ZERO,
         // BigDecimal::add);
+    }
+
+    @Override
+    public Long initializeNewCart(){
+        // Crée une nouvelle instance de l'entité Cart
+        Cart newCart = new Cart();
+        // Génère un nouvel ID unique pour le panier en incrémentant un compteur atomique
+        Long newCartId = cartIdGenerator.incrementAndGet();
+        // Associe l'ID généré au nouveau panier
+        newCart.setId(newCartId);
+        // Sauvegarde le panier en base de données et retourne son ID
+        return cartRepository.save(newCart).getId();
     }
 
 }

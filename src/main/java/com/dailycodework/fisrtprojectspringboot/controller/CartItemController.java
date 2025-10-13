@@ -2,6 +2,9 @@ package com.dailycodework.fisrtprojectspringboot.controller;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,13 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.response.ApiResponse;
 import com.dailycodework.fisrtprojectspringboot.service.cart.ICartItemService;
+import com.dailycodework.fisrtprojectspringboot.service.cart.ICartService;
 
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RequiredArgsConstructor
@@ -23,11 +22,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("${api.prefix}/cartItems")
 public class CartItemController {
     private final ICartItemService cartItemService;
+    private final ICartService cartService;//Je m'etais trompe de Repository
 
     @PostMapping("/item/add")
     public ResponseEntity<ApiResponse> addItemToCart(@RequestParam Long cartId, @RequestParam Long productId,
             @RequestParam int quantity) {
         try {
+            //This line checks if the cartId provided in the request is null. A null value indicates that the user does not yet have a shopping cart.
+            if (cartId == null) {
+                //this line calls the initializeNewCart() method from the cartService. 
+                //This service method is responsible for creating a new, empty cart in the system and returning its unique ID. This new ID is then assigned to the cartId variable.
+                cartId = cartService.initializeNewCart();
+            }
             cartItemService.addItemToCart(cartId, productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
