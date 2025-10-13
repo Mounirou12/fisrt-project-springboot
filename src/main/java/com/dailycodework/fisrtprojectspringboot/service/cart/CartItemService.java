@@ -89,7 +89,11 @@ public class CartItemService implements ICartItemService {
                     item.setTotalPrice();// Recalcule le prix total (unitPrice * quantity)
                 });
         // Récupère le montant total actuel du panier
-        BigDecimal totalAmount = cart.getTotalAmount();
+        // BigDecimal totalAmount = cart.getTotalAmount();
+        // Calcule le montant total du panier en additionnant le prix total de chaque article
+        BigDecimal totalAmount = cart.getItems().stream() // Parcourt tous les articles du panier
+        .map(CartItem::getTotalPrice)                    // Récupère le prix total de chaque article
+        .reduce(BigDecimal.ZERO, BigDecimal::add);       // Additionne tous les prix en partant de zéro
         // Réassigne le même montant total (OPÉRATION REDONDANTE)
         cart.setTotalAmount(totalAmount);
         // Sauvegarde les modifications du panier en base de données
