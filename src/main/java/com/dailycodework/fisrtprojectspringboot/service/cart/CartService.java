@@ -8,6 +8,7 @@ import com.dailycodework.fisrtprojectspringboot.model.Cart;
 import com.dailycodework.fisrtprojectspringboot.repository.CartItemRepository;
 import com.dailycodework.fisrtprojectspringboot.repository.CartRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,6 +30,7 @@ public class CartService implements ICartService {
         return cartRepository.save(cart);
     }
 
+    @Transactional// Opération transactionnelle pour garantir l'intégrité des données
     @Override
     public void clearCart(Long id) {
         // Récupère le panier
