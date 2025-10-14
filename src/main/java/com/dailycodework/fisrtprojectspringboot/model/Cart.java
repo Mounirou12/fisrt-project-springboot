@@ -27,11 +27,6 @@ public class Cart {
     private Long id;
     private BigDecimal totalAmount = BigDecimal.ZERO;// Montant total du panier, initialisé à zéro par défaut BigDecimal pour la précision des calculs monétaires
 
-    //@JsonIgnore
-    // Relation One-to-Many : un panier peut contenir plusieurs CartItem
-    // mappedBy="cart" : la relation est gérée par l'attribut 'cart' dans CartItem
-    // cascade = CascadeType.ALL : toutes les opérations (persist, merge, remove, etc.) sont cascadées
-    // orphanRemoval = true : les CartItem sans référence à un panier sont automatiquement supprimés
     @OneToMany(mappedBy="cart",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<CartItem> items = new HashSet<>();// Collection d'articles (CartItem) contenus dans ce panier Set évite les doublons (si la logique métier le permet)
 

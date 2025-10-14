@@ -2,7 +2,7 @@ package com.dailycodework.fisrtprojectspringboot.model;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -32,13 +32,11 @@ public class CartItem {
 
     @ManyToOne// Relation Many-to-One : plusieurs instances de cette entité peuvent être associées à un seul Product
     @JoinColumn(name = "product_id")// Spécifie la colonne de jointure dans la table pour la relation avec Product
-    //@JsonBackReference// Annotation Jackson (commentée) pour éviter la sérialisation circulaire en  JSON
     private Product product;// Référence à l'entité Product associée à cette ligne
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)// Relation Many-to-One avec cascade ALL : les opérations sur Cart affecteront cette entité
-
     @JoinColumn(name = "cart_id")// Spécifie la colonne de jointure pour la relation avec Cart
-    // @JsonBackReference // Annotation Jackson commentée pour la gestion des références circulaires
     private Cart cart; // Référence au panier (Cart) auquel cette ligne appartient
 
     public void setTotalPrice() {//correction du nom
