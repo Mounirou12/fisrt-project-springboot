@@ -6,4 +6,6 @@ import com.dailycodework.fisrtprojectspringboot.model.User;
 
 public interface UserRepository extends JpaRepository<User,Long>{
 
+    boolean existsByEmail(String email);// Vérifier l'existence d'un utilisateur par son adresse email
+
 }
