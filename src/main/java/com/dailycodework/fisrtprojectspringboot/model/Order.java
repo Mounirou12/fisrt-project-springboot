@@ -13,6 +13,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,5 +36,9 @@ public class Order {
     private OrderStatus orderStatus;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval=true)
     private Set<OrderItem> orderItems;
+    
+    @ManyToOne// Relation Many-to-One : une seule instance de Order peut avoir plusieurs instances de User
+    @JoinColumn(name = "user_id")
+    private User user;
     
 }

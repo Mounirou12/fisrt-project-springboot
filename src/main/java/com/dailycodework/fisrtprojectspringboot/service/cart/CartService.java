@@ -67,4 +67,9 @@ public class CartService implements ICartService {
         return cartRepository.save(newCart).getId();
     }
 
+    @Override// Récupérer le panier par ID
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
+    }
+
 }
