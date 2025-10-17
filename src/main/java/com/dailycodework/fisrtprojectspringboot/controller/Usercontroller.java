@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dailycodework.fisrtprojectspringboot.dto.UserDto;
 import com.dailycodework.fisrtprojectspringboot.exceptions.AlreadyExistsException;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.User;
@@ -38,7 +39,8 @@ public class Usercontroller {
         try {
             // Récupérer l'utilisateur par son ID et la retourner 
             User user = userService.getUserById(userId);
-            return  ResponseEntity.ok(new ApiResponse("Success!", user));// Retourner l'utilisateur avec un message de success
+            UserDto  userDto = userService.convertUserToDto(user);// Convertir l'utilisateur en UserDto 
+            return  ResponseEntity.ok(new ApiResponse("Success!", userDto));// Retourner l'utilisateur avec un message de success
         } catch (ResourceNotFoundException e) {// Gestion de l'erreur si l'utilisateur n'existe pas
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));// Retourner un code 404 et un message d'erreur
         }
@@ -50,7 +52,8 @@ public class Usercontroller {
         try {
             // Créer un nouvel utilisateur
             User user = userService.createUser(request);
-            return ResponseEntity.ok(new ApiResponse("Create User Success!", user));// Retourner l'utilisateur avec un message de success
+            UserDto  userDto = userService.convertUserToDto(user);// Convertir l'utilisateur en UserDto
+            return ResponseEntity.ok(new ApiResponse("Create User Success!", userDto));// Retourner l'utilisateur avec un message de success
         } catch (AlreadyExistsException e) {// Gestion de l'erreur si l'utilisateur existe deja
             return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));// Retourner un code 409 et un message d'erreur
         }
@@ -62,9 +65,10 @@ public class Usercontroller {
         try {
             // Mettre à jour l'utilisateur existant 
             User user = userService.updateUser(request, userId);
-            return ResponseEntity.ok(new ApiResponse("Update User Success!", user));// Retourner l'utilisateur avec un message de success
+            UserDto  userDto = userService.convertUserToDto(user);// Convertir l'utilisateur en UserDto
+            return ResponseEntity.ok(new ApiResponse("Update User Success!", userDto));// Retourner l'utilisateur avec un message de success
         } catch (ResourceNotFoundException e) {// Gestion de l'erreur si l'utilisateur n'existe pas
-            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));// Retourner un code 404 et un message d'erreur
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));//
         }
     }
 

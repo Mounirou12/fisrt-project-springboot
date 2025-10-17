@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +25,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor//is an annotation from the Project Lombok library. It automatically generates a public, no-argument constructor for the Order class. 
 @Entity
+@Table(name = "orders")//is an annotation from the Project Lombok library. It specifies the table name for the Order class in the database.
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

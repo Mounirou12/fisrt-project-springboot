@@ -13,6 +13,7 @@ public class ProductDto {
 
     // DTO (Data Transfer Object) pour transférer les données Product via l'API
     // Contient uniquement les champs nécessaires pour l'exposition externe
+    private Long id; //i forgot this 
     private String name;
     private String brand;
     private BigDecimal price;

@@ -2,8 +2,10 @@ package com.dailycodework.fisrtprojectspringboot.service.user;
 
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.dailycodework.fisrtprojectspringboot.dto.UserDto;
 import com.dailycodework.fisrtprojectspringboot.exceptions.AlreadyExistsException;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.User;
@@ -17,11 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService implements IUserService {
     private final UserRepository userRepository;
+    private  final ModelMapper modelMapper;// Créer une nouvelle instance de ModelMapper
 
     @Override
     public User getUserById(Long userId) {
         return userRepository.findById(userId)// Récupérer l'utilisateur par son ID
         .orElseThrow(() -> new ResourceNotFoundException("User not found"));// Lancer une exception si l'utilisateur n'existe pas
+ 
     }
 
     // Créer un nouvel utilisateur
@@ -56,6 +60,12 @@ public class UserService implements IUserService {
             // Sinon, lancer une exception
             throw new ResourceNotFoundException("User not found");
         });
+    }
+
+    // Convertir l'utilisateur en UserDto
+    @Override
+    public UserDto convertUserToDto(User user){
+        return  modelMapper.map(user, UserDto.class);
     }
 
 }

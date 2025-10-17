@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("{api.prefix}/orders")
+@RequestMapping("${api.prefix}/orders")// Correction du chemin d'accueil
 public class OrderController {
     private final IOrderService orderService;
 
