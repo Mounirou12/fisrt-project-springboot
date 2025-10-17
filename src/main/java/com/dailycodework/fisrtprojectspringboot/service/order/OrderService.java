@@ -5,8 +5,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.dailycodework.fisrtprojectspringboot.dto.OrderDto;
 import com.dailycodework.fisrtprojectspringboot.enums.OrderStatus;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Cart;
@@ -25,6 +27,7 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final ICartService cartService;
+    private final ModelMapper modelMapper;// Utiliser ModelMapper pour mapper les objets
 
     @Override
     public Order placeOrder(Long userId) {
@@ -75,15 +78,23 @@ public class OrderService implements IOrderService {
 
     // Récupérer une commande par son ID et lancer une exception si elle n'existe pas
     @Override
-    public Order getOrder(Long orderId) {
-        return orderRepository.findById(orderId).// Récupérer la commande par son ID 
-            orElseThrow(() -> new ResourceNotFoundException("Order not found"));// Lancer une exception si la commande n'existe pas
+    public OrderDto getOrder(Long orderId) {
+        return orderRepository.findById(orderId)// Récupérer la commande par son ID et la retourner
+        .map(this::convertToDto)// Convertir la commande en OrderDto et la retourner
+        .orElseThrow(()->new ResourceNotFoundException("Order not found"));// Lancer une exception si la commande n'existe pas
     }
 
     // Récupérer toutes les commandes d'un utilisateur et les retourner en tant que liste 
     @Override
-    public List<Order> getUserOders(Long userId) {
-        return orderRepository.findByUserId(userId);// Récupérer toutes les commandes d'un utilisateur
+    public List<OrderDto> getUserOders(Long userId) {// Récupérer toutes les commandes d'un utilisateur
+        List<Order> orders = orderRepository.findByUserId(userId);// Récupérer toutes les commandes d'un utilisateur
+        return orders.stream()// Parcourir toutes les commandes et les convertir en OrderDto et les ajouter à la liste
+        .map(this::convertToDto)// Convertir chaque commande en OrderDto et les ajouter à la liste
+        .toList();// Retourner la liste de OrderDto convertie en tant que liste
     }
 
+    // Convertir une commande en OrderDto en utilisant ModelMapper
+    private OrderDto convertToDto(Order order){// Convertir une commande en OrderDto
+        return modelMapper.map(order, OrderDto.class);// Utiliser ModelMapper pour convertir la commande en OrderDto
+    }
 }
