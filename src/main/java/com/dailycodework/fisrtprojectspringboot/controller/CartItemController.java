@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
+import com.dailycodework.fisrtprojectspringboot.model.Cart;
+import com.dailycodework.fisrtprojectspringboot.model.User;
 import com.dailycodework.fisrtprojectspringboot.response.ApiResponse;
 import com.dailycodework.fisrtprojectspringboot.service.cart.ICartItemService;
 import com.dailycodework.fisrtprojectspringboot.service.cart.ICartService;
+import com.dailycodework.fisrtprojectspringboot.service.user.IUserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,18 +27,19 @@ import lombok.RequiredArgsConstructor;
 public class CartItemController {
     private final ICartItemService cartItemService;
     private final ICartService cartService;//Je m'etais trompe de Repository
+    private final IUserService userService;// Ajout de l'interface IUserService
 
     @PostMapping("/item/add")
-    public ResponseEntity<ApiResponse> addItemToCart(@RequestParam(required = false) Long cartId, @RequestParam Long productId,
+    public ResponseEntity<ApiResponse> addItemToCart( @RequestParam Long productId,
             @RequestParam int quantity) {
         try {
-            //This line checks if the cartId provided in the request is null. A null value indicates that the user does not yet have a shopping cart.
-            if (cartId == null) {
+            //this line calls the getUserById() method from the userService.
+                User user  = userService.getUserById(1L);
                 //this line calls the initializeNewCart() method from the cartService. 
-                //This service method is responsible for creating a new, empty cart in the system and returning its unique ID. This new ID is then assigned to the cartId variable.
-                cartId = cartService.initializeNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productId, quantity);
+                //It creates a new cart for the user and returns it
+                Cart cart = cartService.initializeNewCart(user);
+            //this line calls the addItemToCart() method from the cartItemService.
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
             return  ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));

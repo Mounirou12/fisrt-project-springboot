@@ -1,10 +1,12 @@
 package com.dailycodework.fisrtprojectspringboot.service.cart;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.dailycodework.fisrtprojectspringboot.model.Cart;
+import com.dailycodework.fisrtprojectspringboot.model.User;
 import com.dailycodework.fisrtprojectspringboot.repository.CartItemRepository;
 import com.dailycodework.fisrtprojectspringboot.repository.CartRepository;
 
@@ -55,16 +57,14 @@ public class CartService implements ICartService {
     }
 
     @Override
-    public Long initializeNewCart(){
-        // Crée une nouvelle instance de l'entité Cart
-        Cart newCart = new Cart();
-        // Génère un nouvel ID unique pour le panier en incrémentant un compteur atomique
-        //Long newCartId = cartIdGenerator.incrementAndGet();
-        // Associe l'ID généré au nouveau panier
-        //newCart.setId(newCartId);
-        // Sauvegarde le panier en base de données et retourne son ID
-        newCart.setTotalAmount(BigDecimal.ZERO);
-        return cartRepository.save(newCart).getId();
+    public Cart initializeNewCart(User user){
+        // Récupère le panier par ID ou crée un nouveau panier si aucun n'existe pour l'utilisateur
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+        .orElseGet(()->{// Crée un nouveau panier si aucun n'existe
+            Cart cart  = new Cart();
+            cart.setUser(user);
+            return cartRepository.save(cart);// Sauvegarde le panier et le retourne
+        });
     }
 
     @Override// Récupérer le panier par ID
