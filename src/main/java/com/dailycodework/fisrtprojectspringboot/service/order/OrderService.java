@@ -93,8 +93,9 @@ public class OrderService implements IOrderService {
         .toList();// Retourner la liste de OrderDto convertie en tant que liste
     }
 
-    // Convertir une commande en OrderDto en utilisant ModelMapper
-    private OrderDto convertToDto(Order order){// Convertir une commande en OrderDto
+    // Convertir une commande en OrderDto en utilisant ModelMapper 
+    @Override
+    public  OrderDto convertToDto(Order order){// Convertir une commande en OrderDto
         return modelMapper.map(order, OrderDto.class);// Utiliser ModelMapper pour convertir la commande en OrderDto
     }
 }

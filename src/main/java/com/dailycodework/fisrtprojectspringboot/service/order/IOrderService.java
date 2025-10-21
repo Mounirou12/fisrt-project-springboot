@@ -12,4 +12,6 @@ public interface IOrderService {
 
     List<OrderDto> getUserOders(Long userId);// Récupérer les commandes d'un utilisateur et les retourner en tant que liste  
 
+    OrderDto convertToDto(Order order);// Convertir une commande en OrderDto
+
 }
