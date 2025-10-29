@@ -1,4 +1,4 @@
-package com.dailycodework.fisrtprojectspringboot.config;
+package com.dailycodework.fisrtprojectspringboot.security.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
