@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.dailycodework.fisrtprojectspringboot.dto.ImageDto;
 import com.dailycodework.fisrtprojectspringboot.dto.ProductDto;
+import com.dailycodework.fisrtprojectspringboot.exceptions.AlreadyExistsException;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Category;
 import com.dailycodework.fisrtprojectspringboot.model.Image;
@@ -35,6 +36,11 @@ public class ProductService implements IProductService {//  Implémente le contr
         // if Yes,set it as the new product category
         // if No,the save it as a new category
         // The set as the new product category
+
+        if(productExists(request.getName(), request.getBrand())){
+        throw new AlreadyExistsException(request.getBrand() + " " + request.getName() + " already exists, you may update this product instead!");
+        }
+
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
@@ -42,6 +48,10 @@ public class ProductService implements IProductService {//  Implémente le contr
                 });
         request.setCategory(category);
         return productRepository.save(createProduct(request, category));
+    }
+
+    private boolean productExists(String name, String brand){
+        return productRepository.existsByNameAndBrand(name,brand);
     }
 
     private Product createProduct(AddProductRequest request, Category category) {

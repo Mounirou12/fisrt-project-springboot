@@ -2,6 +2,7 @@ package com.dailycodework.fisrtprojectspringboot.controller;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dailycodework.fisrtprojectspringboot.dto.ProductDto;
+import com.dailycodework.fisrtprojectspringboot.exceptions.AlreadyExistsException;
 import com.dailycodework.fisrtprojectspringboot.exceptions.ResourceNotFoundException;
 import com.dailycodework.fisrtprojectspringboot.model.Product;
 import com.dailycodework.fisrtprojectspringboot.request.AddProductRequest;
@@ -59,8 +61,8 @@ import lombok.RequiredArgsConstructor;
                 // Convertit une entité Product en ProductDto using ModelMapper pour séparer les données de la base de données de l'API REST
                 ProductDto productDto = productService.convertToDto(theproduct);
                 return ResponseEntity.ok(new ApiResponse("Add product success", productDto));
-            } catch (Exception e) {
-                return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(), null));
+            } catch (AlreadyExistsException e) {
+                return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
             }
         }
 
