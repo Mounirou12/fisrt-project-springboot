@@ -1,28 +1,60 @@
 package com.dailycodework.fisrtprojectspringboot.security.user;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.dailycodework.fisrtprojectspringboot.model.User;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ShopUserDeails implements UserDetails{
+
+    private Long Id;
+    private String email;
+    private String password;
+
+    private Collection<GrantedAuthority> authorities; 
+
+    public static ShopUserDeails buildUserDetails(User user){
+        List<GrantedAuthority> authorities = user.getRoles()// Récupérer la collection d'autorisations
+            .stream()// Convertir la collection en Stream
+            .map(role -> new SimpleGrantedAuthority(role.getName()))// Convertir chaque role en SimpleGrantedAuthority
+            .collect(Collectors.toList());// Collecter les autorisations dans une liste
+            return  new ShopUserDeails(// Créer une nouvelle instance de ShopUserDeails
+                user.getId(),// Récupérer l'id
+                user.getEmail(),// Récupérer l'email
+                user.getPassword(),// Récupérer le mot de passe
+                authorities// Récupérer la collection d'autorisations
+            );
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        return null;
+        return authorities;// Récupérer la collection d'autorisations
     }
 
     @Override
     public String getPassword() {
-        // TODO Auto-generated method stub
-        return null;
+        return password;// Récupérer le mot de passe
     }
 
     @Override
     public String getUsername() {
         // TODO Auto-generated method stub
-        return null;
+        return email;// Récupérer l'email
     }
 
     @Override
