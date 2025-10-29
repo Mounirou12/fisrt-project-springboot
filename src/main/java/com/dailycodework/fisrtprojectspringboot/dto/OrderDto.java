@@ -1,7 +1,7 @@
 package com.dailycodework.fisrtprojectspringboot.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 import lombok.Data;
@@ -10,7 +10,7 @@ import lombok.Data;
 public class OrderDto {
     private Long id;
     private Long userId;
-    private LocalDateTime orderDate;
+    private LocalDate orderDate;
     private BigDecimal totalAmount;
     private String status;
     private List<OrderItemDto> items;

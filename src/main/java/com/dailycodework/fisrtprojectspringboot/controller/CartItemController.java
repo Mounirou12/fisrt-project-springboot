@@ -34,7 +34,7 @@ public class CartItemController {
             @RequestParam int quantity) {
         try {
             //this line calls the getUserById() method from the userService.
-                User user  = userService.getUserById(1L);
+                User user  = userService.getUserById(4L);
                 //this line calls the initializeNewCart() method from the cartService. 
                 //It creates a new cart for the user and returns it
                 Cart cart = cartService.initializeNewCart(user);
