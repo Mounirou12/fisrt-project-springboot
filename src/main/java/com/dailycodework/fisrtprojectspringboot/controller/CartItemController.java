@@ -1,6 +1,7 @@
 package com.dailycodework.fisrtprojectspringboot.controller;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import com.dailycodework.fisrtprojectspringboot.service.cart.ICartItemService;
 import com.dailycodework.fisrtprojectspringboot.service.cart.ICartService;
 import com.dailycodework.fisrtprojectspringboot.service.user.IUserService;
 
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 
@@ -33,8 +35,8 @@ public class CartItemController {
     public ResponseEntity<ApiResponse> addItemToCart( @RequestParam Long productId,
             @RequestParam int quantity) {
         try {
-            //this line calls the getUserById() method from the userService.
-                User user  = userService.getUserById(4L);
+            //this line calls the getAuthenticatedUser() method from the userService.
+                User user  = userService.getAuthenticatedUser();// Récupérer l'utilisateur connecté par son email
                 //this line calls the initializeNewCart() method from the cartService. 
                 //It creates a new cart for the user and returns it
                 Cart cart = cartService.initializeNewCart(user);
@@ -43,6 +45,8 @@ public class CartItemController {
             return ResponseEntity.ok(new ApiResponse("Add Item Success", null));
         } catch (ResourceNotFoundException e) {
             return  ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+        } catch(JwtException e){// Catch JWT exceptions
+            return  ResponseEntity.status(UNAUTHORIZED).body(new ApiResponse(e.getMessage(), null));
         }
     }
 

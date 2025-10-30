@@ -3,6 +3,9 @@ package com.dailycodework.fisrtprojectspringboot.service.user;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.dailycodework.fisrtprojectspringboot.dto.UserDto;
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService implements IUserService {
     private final UserRepository userRepository;
     private  final ModelMapper modelMapper;// Créer une nouvelle instance de ModelMapper
+    private final PasswordEncoder passwordEncoder;// Créer une nouvelle instance de PasswordEncoder
 
     @Override
     public User getUserById(Long userId) {
@@ -38,7 +42,7 @@ public class UserService implements IUserService {
             user.setFirstName(request.getFirstName());// Mettre à jour le premier nom
             user.setLastName(request.getLastName());// Mettre à jour le dernier nom
             user.setEmail(request.getEmail());// Mettre à jour l'email
-            user.setPassword(request.getPassword());// Mettre à jour le mot de passe
+            user.setPassword(passwordEncoder.encode(request.getPassword()));// Mettre à jour le mot de passe en le cryptant
             return user;// Retourner l'utilisateur créé
         }).orElseThrow(()-> new AlreadyExistsException("OOps! " + request.getEmail() + " already exists!"));// Lancer une exception si l'utilisateur existe deja
     }
@@ -66,6 +70,13 @@ public class UserService implements IUserService {
     @Override
     public UserDto convertUserToDto(User user){
         return  modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public User getAuthenticatedUser() {// Récupérer l'utilisateur connecté par son email
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();// Récupérer l'authentification de l'utilisateur connecté par son email
+        String email = authentication.getName();// Récupérer l'email de l'utilisateur connecté par son email
+        return userRepository.findByEmail(email);// Récupérer l'utilisateur par son email
     }
 
 }

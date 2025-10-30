@@ -1,7 +1,6 @@
 package com.dailycodework.fisrtprojectspringboot.security.jwt;
 
 
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -89,9 +88,7 @@ public class JwtUtils {
             .parseSignedClaims(token);
             return true;
         } catch (JwtException| IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            throw new JwtException(e.getMessage());// Renvoyer une erreur si le token est invalide
         }
-        return false;
     }
 }

@@ -30,9 +30,9 @@ public class ShopConfig {
 
 
     private final ShopUserDetailsService userDetailsService;// Injection de dépendance via le constructeur 
-    private JwtAuthEntryPoint authEntryPoint;// Injection de dépendance via le constructeur
+    private final JwtAuthEntryPoint authEntryPoint;// Injection de dépendance via le constructeur (oubli du keyword fnal)
 
-    private static final List<String> SECURED_URLS = List.of(null);// Liste des URLs protégées par l'authentification  
+    private static final List<String> SECURED_URLS = List.of("/api/v1/carts/**","/api/v1/cartItems/**");// Liste des URLs protégées par l'authentification  
 
     // Annotation Spring qui déclare que cette méthode retourne un bean à gérer par le conteneur Spring
     @Bean
