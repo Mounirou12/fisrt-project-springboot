@@ -1,6 +1,5 @@
 package com.dailycodework.fisrtprojectspringboot.security.user;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +19,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShopUserDeails implements UserDetails{
+public class ShopUserDetails implements UserDetails{
 
     private Long Id;
     private String email;
@@ -28,12 +27,12 @@ public class ShopUserDeails implements UserDetails{
 
     private Collection<GrantedAuthority> authorities; 
 
-    public static ShopUserDeails buildUserDetails(User user){
+    public static ShopUserDetails buildUserDetails(User user){
         List<GrantedAuthority> authorities = user.getRoles()// Récupérer la collection d'autorisations
             .stream()// Convertir la collection en Stream
             .map(role -> new SimpleGrantedAuthority(role.getName()))// Convertir chaque role en SimpleGrantedAuthority
             .collect(Collectors.toList());// Collecter les autorisations dans une liste
-            return  new ShopUserDeails(// Créer une nouvelle instance de ShopUserDeails
+            return  new ShopUserDetails(// Créer une nouvelle instance de ShopUserDeails
                 user.getId(),// Récupérer l'id
                 user.getEmail(),// Récupérer l'email
                 user.getPassword(),// Récupérer le mot de passe
