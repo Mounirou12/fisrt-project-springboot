@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.dailycodework.fisrtprojectspringboot.security.jwt.AuthTokenFilter;
 import com.dailycodework.fisrtprojectspringboot.security.jwt.JwtAuthEntryPoint;
+import com.dailycodework.fisrtprojectspringboot.security.jwt.JwtUtils;
 import com.dailycodework.fisrtprojectspringboot.security.user.ShopUserDetailsService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class ShopConfig {
 
     private final ShopUserDetailsService userDetailsService;// Injection de dépendance via le constructeur 
     private final JwtAuthEntryPoint authEntryPoint;// Injection de dépendance via le constructeur (oubli du keyword fnal)
+    private final JwtUtils jwtUtils;// Injection de dépendance via le constructeur
 
     private static final List<String> SECURED_URLS = List.of("/api/v1/carts/**","/api/v1/cartItems/**");// Liste des URLs protégées par l'authentification  
 
@@ -50,7 +52,7 @@ public class ShopConfig {
 
     @Bean
     public AuthTokenFilter authTokenFilter(){// Crée et retourne une nouvelle instance de AuthTokenFilter
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtils, userDetailsService);// Retourne l'instance de AuthTokenFilter configurée
     }
 
     @Bean

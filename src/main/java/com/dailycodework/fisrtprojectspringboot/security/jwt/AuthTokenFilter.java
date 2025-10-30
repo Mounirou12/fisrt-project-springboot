@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -16,10 +17,13 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
+@Component// Indique que cette classe est un composant Spring
+@RequiredArgsConstructor// Injection de dépendance
 public class AuthTokenFilter extends OncePerRequestFilter {
-    private JwtUtils jwtUtils;
-    private ShopUserDetailsService userDetailsService;
+    private final JwtUtils jwtUtils;// Injection de dépendance et oubli du keyword final
+    private final ShopUserDetailsService userDetailsService;
 
     /**
  * Méthode principale du filtre qui intercepte chaque requête HTTP
