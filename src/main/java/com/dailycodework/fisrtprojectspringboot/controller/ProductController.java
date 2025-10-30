@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +55,7 @@ import lombok.RequiredArgsConstructor;
             }
         }
 
+        @PreAuthorize("hasRole('ROLE_ADMIN')")// Seule les utilisateurs avec le rôle ADMIN peuvent accéder à cette méthode
         @PostMapping("/add")
         public ResponseEntity<ApiResponse> addProduct(@RequestBody AddProductRequest product) {
             try {
@@ -66,6 +68,7 @@ import lombok.RequiredArgsConstructor;
             }
         }
 
+        @PreAuthorize("hasRole('ROLE_ADMIN')")// Seule les utilisateurs avec le rôle ADMIN peuvent accéder à cette méthode
         @PutMapping("/product/{productId}/update")
         public ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest product,
                 @PathVariable("productId") Long id) {
@@ -79,6 +82,7 @@ import lombok.RequiredArgsConstructor;
             }
         }
 
+        @PreAuthorize("hasRole('ROLE_ADMIN')")// Seule les utilisateurs avec le rôle ADMIN peuvent accéder à cette méthode
         @DeleteMapping("/product/{productId}/delete")
         public ResponseEntity<ApiResponse> deleteProductById(@PathVariable("productId") Long id) {
             try {
